@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Checked AI</string>
+    <string name="app_url">https://checked-ai.ai.studio</string>
+    <string name="offline_title">You are currently offline</string>
+    <string name="offline_msg">Checked AI requires an active network connection to query verification heuristics and models.</string>
+</resources>

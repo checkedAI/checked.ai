@@ -1,0 +1,8 @@
+{
+  "name": "Checked AI",
+  "description": "Verify Before You Trust. Advanced AI detection, deepfake analysis, and digital content authenticity platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

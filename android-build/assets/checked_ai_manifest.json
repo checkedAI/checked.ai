@@ -1,0 +1,12 @@
+{
+  "appName": "Checked AI",
+  "packageName": "org.checkedai.app",
+  "versionName": "1.0.3",
+  "versionCode": 103,
+  "minSdkVersion": 21,
+  "targetSdkVersion": 34,
+  "supportedArchitectures": ["arm64-v8a", "armeabi-v7a", "x86_64", "x86"],
+  "signatureScheme": ["v1", "v2", "v3"],
+  "developer": "Checked AI Security Labs",
+  "releaseType": "Production Signed"
+}

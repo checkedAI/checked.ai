@@ -1,0 +1,327 @@
+[
+  {
+    "id": "scn_txt_1793296057585",
+    "type": "text",
+    "targetName": "Ceramic Sintering Test.txt",
+    "createdAt": "2026-10-29T17:47:37.585Z",
+    "status": "suspicious",
+    "confidenceScore": 68,
+    "confidenceJustification": "Calculated from sentence burstiness variance (3.2 std dev) and 0 detected generative transition markers across 61 words.",
+    "summary": "Mixed linguistic signals; contains recurring synthetic cadence patterns (Preliminary Heuristic Assessment).",
+    "explanation": "Forensic heuristic evaluation analyzed 7 sentences across 61 words. Sentence length standard deviation is 3.2 words (Burstiness index: 38/100). The engine observed 0 hallmark generative transition markers and 0 repeated phrase patterns. Detection results are probabilistic indicators based on linguistic features.",
+    "indicators": [
+      {
+        "name": "Sentence Burstiness & Rhythm",
+        "status": "warning",
+        "detail": "Standard deviation of sentence lengths is 3.2 words (Burstiness Score: 38/100). Mean length: 9.1 words."
+      },
+      {
+        "name": "Formulaic Transition Frequency",
+        "status": "nominal",
+        "detail": "Zero stereotypical generative connective markers identified."
+      },
+      {
+        "name": "Lexical Diversity & Entropy",
+        "status": "nominal",
+        "detail": "43 unique words identified (96% lexical ratio) across sample."
+      },
+      {
+        "name": "Repeated Phrasing Sequences",
+        "status": "nominal",
+        "detail": "No abnormal phrase repetitions identified."
+      }
+    ],
+    "repetitivePatterns": [
+      "Sentence length distribution clusters around 9.1 words",
+      "Balanced paragraph cadence without localized colloquial spikes"
+    ],
+    "supportingReasons": [
+      "Moderate sentence length uniformity with standard deviation of 3.2 words.",
+      "Structural cadence displays balanced syntactic rhythm with limited authorial colloquialisms."
+    ],
+    "modelUsed": "Checked-Linguistic Local Heuristic V3.8 (Pending Neural API Connection)",
+    "isDemoMode": true,
+    "isBenchmark": false,
+    "limitations": [
+      "Preliminary Heuristic Assessment: The backend neural detection model is currently pending API configuration; heuristics rely on statistical variance rather than transformer embeddings.",
+      "Text detection is probabilistic and subject to false positives on formal, technical, or legal writing.",
+      "Human authors writing in academic or structured genres naturally exhibit lower burstiness.",
+      "Paraphrased or post-edited AI text can blend statistical signals."
+    ],
+    "metadata": {
+      "wordCount": 61,
+      "charCount": 432,
+      "sentenceCount": 7,
+      "burstinessScore": 38,
+      "sourceSnippet": "We measured dielectric breakdown voltages across twelve 0.25mm alumina substrate coupons under ambient laboratory humidity (44 ± 2% RH). Contrary to the predict"
+    }
+  },
+  {
+    "id": "scn_txt_1793296039033",
+    "type": "text",
+    "targetName": "Automated Logistics Strategy.txt",
+    "createdAt": "2026-10-29T17:47:19.033Z",
+    "status": "high_risk",
+    "confidenceScore": 94,
+    "confidenceJustification": "Calculated from sentence burstiness variance (1.7 std dev) and 8 detected generative transition markers across 59 words.",
+    "summary": "High structural and perplexity uniformity characteristic of large language model text synthesis (Preliminary Heuristic Assessment).",
+    "explanation": "Forensic heuristic evaluation analyzed 3 sentences across 59 words. Sentence length standard deviation is 1.7 words (Burstiness index: 20/100). The engine observed 8 hallmark generative transition markers and 0 repeated phrase patterns. Detection results are probabilistic indicators based on linguistic features.",
+    "indicators": [
+      {
+        "name": "Sentence Burstiness & Rhythm",
+        "status": "alert",
+        "detail": "Standard deviation of sentence lengths is 1.7 words (Burstiness Score: 20/100). Mean length: 19.7 words."
+      },
+      {
+        "name": "Formulaic Transition Frequency",
+        "status": "alert",
+        "detail": "Detected 8 hallmark generative transitions: \"in conclusion\", \"furthermore\", \"it is important to note\"."
+      },
+      {
+        "name": "Lexical Diversity & Entropy",
+        "status": "nominal",
+        "detail": "48 unique words identified (94% lexical ratio) across sample."
+      },
+      {
+        "name": "Repeated Phrasing Sequences",
+        "status": "nominal",
+        "detail": "No abnormal phrase repetitions identified."
+      }
+    ],
+    "repetitivePatterns": [
+      "Sentence length distribution clusters around 19.7 words",
+      "Balanced paragraph cadence without localized colloquial spikes"
+    ],
+    "supportingReasons": [
+      "Exceptionally low sentence burstiness (std dev: 1.7 words per sentence), reflecting rigid syntactic symmetry.",
+      "Contains canonical generative transition markers: \"in conclusion\", \"furthermore\", \"it is important to note\", \"testament to\", \"fostering\", \"transformative\", \"undeniably\", \"synergistic\".",
+      "Lexical diversity index of 94% shows uniform vocabulary distribution typical of automated synthesis."
+    ],
+    "modelUsed": "Checked-Linguistic Local Heuristic V3.8 (Pending Neural API Connection)",
+    "isDemoMode": true,
+    "isBenchmark": false,
+    "limitations": [
+      "Preliminary Heuristic Assessment: The backend neural detection model is currently pending API configuration; heuristics rely on statistical variance rather than transformer embeddings.",
+      "Text detection is probabilistic and subject to false positives on formal, technical, or legal writing.",
+      "Human authors writing in academic or structured genres naturally exhibit lower burstiness.",
+      "Paraphrased or post-edited AI text can blend statistical signals."
+    ],
+    "metadata": {
+      "wordCount": 59,
+      "charCount": 506,
+      "sentenceCount": 3,
+      "burstinessScore": 20,
+      "sourceSnippet": "Artificial intelligence has undeniably revolutionized the modern workforce by optimizing workflows and fostering unprecedented collaboration across diverse indu"
+    }
+  },
+  {
+    "id": "scn_txt_9012",
+    "type": "text",
+    "targetName": "Quarterly Executive Earnings Summary.txt",
+    "createdAt": "2026-10-28T21:40:00Z",
+    "status": "high_risk",
+    "confidenceScore": 88,
+    "summary": "Strong structural and perplexity uniformity characteristic of large language model text synthesis.",
+    "explanation": "The sample exhibits exceptionally low burstiness, rigid syntactic symmetry, and repetitive transitional phrases (\"In conclusion\", \"Furthermore\", \"It is important to note\"). Authorship cannot be determined with mathematical certainty; this probabilistic assessment suggests heavy AI generation or refinement.",
+    "indicators": [
+      {
+        "name": "Perplexity Uniformity",
+        "status": "alert",
+        "detail": "Token probability distribution remains unusually constant across all 4 paragraphs."
+      },
+      {
+        "name": "Sentence Burstiness",
+        "status": "alert",
+        "detail": "Variance in sentence length and clause depth is minimal (mean: 18.2 words, std dev: 1.4)."
+      },
+      {
+        "name": "Formulaic Rhetoric",
+        "status": "warning",
+        "detail": "Contains 5 canonical generative transition markers with balanced neutral tone."
+      },
+      {
+        "name": "Stylistic Idiosyncrasy",
+        "status": "nominal",
+        "detail": "Standard formal register without domain slang or personal voice."
+      }
+    ],
+    "modelUsed": "Checked-Linguistic V3.8 (Gemini-Engine)",
+    "isDemoMode": false,
+    "limitations": [
+      "Text detection is probabilistic and subject to false positives on formal technical or legal writing.",
+      "Lightly edited or paraphrased text may evade statistical boundaries."
+    ],
+    "metadata": {
+      "wordCount": 412,
+      "charCount": 2680,
+      "readingTime": "1.6 min"
+    },
+    "isBenchmark": true
+  },
+  {
+    "id": "scn_img_9011",
+    "type": "image",
+    "targetName": "Identity_Document_Photo_Proof.png",
+    "createdAt": "2026-10-28T20:15:00Z",
+    "status": "suspicious",
+    "confidenceScore": 74,
+    "summary": "Localized diffusion artifacts and bilateral corneal reflection mismatch detected.",
+    "explanation": "Detailed frequency analysis indicates anomalous high-frequency noise suppression along the subject hairline and collar seam. Bilateral eye catchlights display differing specular angles, commonly observed in latent diffusion models.",
+    "indicators": [
+      {
+        "name": "Specular Consistency",
+        "status": "warning",
+        "detail": "Light vector reflection angles between left and right iris differ by ~14 degrees."
+      },
+      {
+        "name": "High-Frequency Noise Floor",
+        "status": "alert",
+        "detail": "Denoising threshold indicates non-optical synthetic interpolation in skin texture."
+      },
+      {
+        "name": "Edge Boundary Gradient",
+        "status": "nominal",
+        "detail": "No stark hard-edge cutouts detected; transitions are soft and natural."
+      },
+      {
+        "name": "EXIF Metadata Analysis",
+        "status": "warning",
+        "detail": "Stripped EXIF camera serial and lens profile; compression quant table generic."
+      }
+    ],
+    "modelUsed": "Checked-Vision V2.4 (Diffusion Artifact Inspector)",
+    "isDemoMode": false,
+    "limitations": [
+      "Heavy JPEG recompression, social media filters, or portrait smoothing can mimic synthetic artifacts.",
+      "Final authentication requires physical identity verification."
+    ],
+    "metadata": {
+      "fileSize": "3.4 MB",
+      "fileFormat": "PNG",
+      "resolution": "2048 x 2048"
+    },
+    "isBenchmark": true
+  },
+  {
+    "id": "scn_web_9010",
+    "type": "website",
+    "targetName": "https://secure-acc0unt-verify-chase.info/login",
+    "createdAt": "2026-10-28T19:02:00Z",
+    "status": "high_risk",
+    "confidenceScore": 96,
+    "summary": "High-severity phishing threat: Brand impersonation and newly registered deceptive domain.",
+    "explanation": "Target domain was registered 3 days ago via privacy proxy. Utilizes zero-digit substitution (\"acc0unt\") and unauthorized trademark terminology imitating financial services. Certificate issued via automated short-lived authority without organization validation.",
+    "indicators": [
+      {
+        "name": "Homoglyph & Typosquatting",
+        "status": "alert",
+        "detail": "Deceptive alphanumeric substitution detected: \"0\" used in place of \"o\"."
+      },
+      {
+        "name": "Domain Age & WHOIS",
+        "status": "alert",
+        "detail": "Domain registered 3 days ago (Risk weight: Critical)."
+      },
+      {
+        "name": "Reputation Blacklist",
+        "status": "alert",
+        "detail": "Flagged on 2 threat intelligence feeds for credential harvesting."
+      },
+      {
+        "name": "SSRF & Redirect Filter",
+        "status": "nominal",
+        "detail": "Host verified external; does not route to private subnets."
+      }
+    ],
+    "modelUsed": "Checked-ThreatNet V4.1 (URL Intelligence)",
+    "isDemoMode": false,
+    "limitations": [
+      "New zero-day phishing sites may temporarily lack public reputation blacklist entries."
+    ],
+    "metadata": {
+      "domainAge": "3 days",
+      "sslValid": true,
+      "issuer": "Let's Encrypt / DV",
+      "ipCountry": "Seychelles"
+    },
+    "isBenchmark": true
+  },
+  {
+    "id": "scn_doc_9009",
+    "type": "file",
+    "targetName": "Vendor_Contract_Amendment_v2.pdf",
+    "createdAt": "2026-10-28T17:28:00Z",
+    "status": "safe",
+    "confidenceScore": 92,
+    "summary": "No malicious macros, hidden script streams, or synthetic content manipulation anomalies detected.",
+    "explanation": "PDF structure validated against ISO 32000 specifications. Metadata timestamps match font rendering embedding streams. Text extraction shows natural linguistic variation consistent with human legal drafting.",
+    "indicators": [
+      {
+        "name": "Macro & Javascript Scanners",
+        "status": "nominal",
+        "detail": "Zero executable actions or /Launch /JavaScript streams present."
+      },
+      {
+        "name": "Font Object Invariants",
+        "status": "nominal",
+        "detail": "Font glyph sets match embedded Type 1 subset tables."
+      },
+      {
+        "name": "Linguistic Naturalness",
+        "status": "nominal",
+        "detail": "High perplexity variance typical of multi-author contract negotiation."
+      }
+    ],
+    "modelUsed": "Checked-DocShield V2.0",
+    "isDemoMode": false,
+    "limitations": [
+      "Static analysis does not guarantee legal validity or enforceability of contract terms."
+    ],
+    "metadata": {
+      "fileSize": "840 KB",
+      "fileFormat": "PDF",
+      "pages": 8
+    },
+    "isBenchmark": true
+  },
+  {
+    "id": "scn_vid_9008",
+    "type": "video",
+    "targetName": "Broadcast_Interview_Clip_04.mp4",
+    "createdAt": "2026-10-28T15:10:00Z",
+    "status": "unable_to_determine",
+    "confidenceScore": 48,
+    "summary": "Low resolution and video compression artifacts preclude reliable facial keyframe verification.",
+    "explanation": "Video compression bit-rate (< 1.2 Mbps) and motion blur suppress the temporal coherence signals necessary for confident deepfake attribution. Frame rate jitter observed.",
+    "indicators": [
+      {
+        "name": "Facial Landmark Temporal Jitter",
+        "status": "warning",
+        "detail": "Landmark variance within expected range but masked by compression macroblocks."
+      },
+      {
+        "name": "Blink Frequency Analysis",
+        "status": "nominal",
+        "detail": "Normal spontaneous blink rate observed (14 blinks/min)."
+      },
+      {
+        "name": "Lip Sync Phoneme Alignment",
+        "status": "warning",
+        "detail": "Audio-visual delay of ~80ms detected, inconclusive due to stream encoding."
+      }
+    ],
+    "modelUsed": "Checked-Deepfake Temporal V1.8 (Forensic Mode)",
+    "isDemoMode": true,
+    "limitations": [
+      "Video analysis requires minimum 1080p resolution and uncompressed facial keyframes for definitive scoring.",
+      "Cannot definitively verify or debunk without original broadcast raw capture."
+    ],
+    "metadata": {
+      "duration": "42s",
+      "fps": 30,
+      "frameCount": 1260,
+      "fileSize": "14.8 MB"
+    },
+    "isBenchmark": true
+  }
+]
