@@ -32,7 +32,12 @@ import {
   Lightbulb,
   HelpCircle,
   UploadCloud,
-  CheckCircle2
+  CheckCircle2,
+  Bot,
+  Radio,
+  Music,
+  Clapperboard,
+  FileAudio
 } from 'lucide-react';
 import { ScanResult, UserProfile } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
@@ -465,6 +470,99 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             Get APK
           </button>
         </div>
+
+        {/* Mobile AI Studio Quick Access */}
+        <div className="space-y-3 pt-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>AI Studio & Generation Suite</span>
+            </span>
+            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+              Gemini Powered
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            <div
+              onClick={() => onNavigate('ai-chat')}
+              className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs hover:border-blue-400 transition-all cursor-pointer flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                <Bot className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-900 truncate">Gemini Chatbot</div>
+                <div className="text-[10px] text-slate-500">Argon / Flash</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => onNavigate('ai-voice')}
+              className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs hover:border-indigo-400 transition-all cursor-pointer flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                <Radio className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-900 truncate">Live Voice</div>
+                <div className="text-[10px] text-slate-500">Live API 3.8</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => onNavigate('ai-music')}
+              className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs hover:border-purple-400 transition-all cursor-pointer flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                <Music className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-900 truncate">Music Studio</div>
+                <div className="text-[10px] text-slate-500">Lyria 3 Clip/Pro</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => onNavigate('ai-image')}
+              className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs hover:border-emerald-400 transition-all cursor-pointer flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-900 truncate">Image Studio</div>
+                <div className="text-[10px] text-slate-500">Nano Banana 2.1</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => onNavigate('ai-video')}
+              className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs hover:border-amber-400 transition-all cursor-pointer flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                <Clapperboard className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-900 truncate">Omni Video</div>
+                <div className="text-[10px] text-slate-500">Generate & Animate</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => onNavigate('ai-transcribe')}
+              className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs hover:border-rose-400 transition-all cursor-pointer flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                <FileAudio className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-900 truncate">Transcribe</div>
+                <div className="text-[10px] text-slate-500">Gemini 3.5 Speech</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* =========================================================================
@@ -762,6 +860,206 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* 3.5 CHECKED AI STUDIO & GENERATION SUITE */}
+      <section className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-100">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Multi-Modal AI Studio Capabilities</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Create, Synthesize & Transcribe with Gemini
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl">
+              Equip your digital verification workflow with next-generation multi-modal synthesis: conversational chatbots, real-time voice, music, imagery, temporal video, and audio transcription.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              6 Creative Engines
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {/* Card 1: Gemini Chatbot */}
+          <div
+            onClick={() => onNavigate('ai-chat')}
+            className="p-5 rounded-2xl border border-slate-200/90 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group bg-slate-50/50 hover:bg-white"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Bot className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                  Argon / Flash
+                </span>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                  Gemini Chatbot
+                </h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Multi-turn cybersecurity and forensic dialog with role-guided system instructions and high-reasoning models.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
+              <span>Start Conversation</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 2: Voice Conversations */}
+          <div
+            onClick={() => onNavigate('ai-voice')}
+            className="p-5 rounded-2xl border border-slate-200/90 hover:border-indigo-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group bg-slate-50/50 hover:bg-white"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Radio className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+                  gemini-3.8-live
+                </span>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                  Voice Conversations
+                </h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Real-time bidirectional speech conversation via the Gemini Live API with 16kHz microphone capture and 24kHz audio synthesis.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600">
+              <span>Launch Live Audio</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 3: Generate Music */}
+          <div
+            onClick={() => onNavigate('ai-music')}
+            className="p-5 rounded-2xl border border-slate-200/90 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group bg-slate-50/50 hover:bg-white"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Music className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
+                  Lyria 3 Clip / Pro
+                </span>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
+                  Generate Music
+                </h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Compose 30-second clips or full-length tracks with Lyria 3, including interactive audio player and generated lyrics structure.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-600">
+              <span>Open Music Studio</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 4: Create & Edit Images */}
+          <div
+            onClick={() => onNavigate('ai-image')}
+            className="p-5 rounded-2xl border border-slate-200/90 hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group bg-slate-50/50 hover:bg-white"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  Nano Banana 2.1
+                </span>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
+                  Create & Edit Images
+                </h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Synthesize visuals from text prompts or edit uploaded images with natural language in 1K/2K resolutions across 5 aspect ratios.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
+              <span>Open Image Studio</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 5: Generate & Animate Video */}
+          <div
+            onClick={() => onNavigate('ai-video')}
+            className="p-5 rounded-2xl border border-slate-200/90 hover:border-amber-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group bg-slate-50/50 hover:bg-white"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Clapperboard className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                  Omni 1.2 Flash
+                </span>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
+                  Video Studio (Text & Animate)
+                </h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Render 16:9 or 9:16 videos from text prompts or animate uploaded photos into motion via the Gemini Interactions API.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-600">
+              <span>Launch Video Studio</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 6: Transcribe Audio */}
+          <div
+            onClick={() => onNavigate('ai-transcribe')}
+            className="p-5 rounded-2xl border border-slate-200/90 hover:border-rose-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group bg-slate-50/50 hover:bg-white"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <FileAudio className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                  Gemini 3.5 Transcribe
+                </span>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-rose-600 transition-colors">
+                  Transcribe Audio
+                </h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Record directly from your microphone or upload recordings to generate verbatim speech-to-text transcripts with instant text verification.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-rose-600">
+              <span>Transcribe Speech</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
         </div>
       </section>
 

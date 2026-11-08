@@ -19,11 +19,13 @@ import { ResultCard } from '../components/ResultCard';
 interface VideoCheckViewProps {
   onScanVideo: (filename: string, duration?: string, fileSize?: string) => Promise<ScanResult>;
   onOpenReportModal: (scan: ScanResult) => void;
+  onNavigate?: (tab: any) => void;
 }
 
 export const VideoCheckView: React.FC<VideoCheckViewProps> = ({
   onScanVideo,
-  onOpenReportModal
+  onOpenReportModal,
+  onNavigate
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -131,13 +133,24 @@ export const VideoCheckView: React.FC<VideoCheckViewProps> = ({
             Supported video: <span className="font-semibold text-slate-700">MP4, WEBM, MOV</span> (Max 50MB)
           </div>
 
-          <button
-            type="button"
-            onClick={handleLoadSample}
-            className="px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md transition-colors"
-          >
-            Load Sample Broadcast Clip
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleLoadSample}
+              className="px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md transition-colors"
+            >
+              Load Sample Broadcast Clip
+            </button>
+            {onNavigate && (
+              <button
+                type="button"
+                onClick={() => onNavigate('ai-video')}
+                className="px-2.5 py-1 text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-md transition-colors"
+              >
+                Create with Omni Video Studio
+              </button>
+            )}
+          </div>
         </div>
 
         {!videoUrl ? (

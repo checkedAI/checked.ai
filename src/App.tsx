@@ -18,6 +18,12 @@ import { PricingView } from './views/PricingView';
 import { AdminDashboardView } from './views/AdminDashboardView';
 import { ApkDownloadView } from './views/ApkDownloadView';
 import { InviteFriendsView } from './views/InviteFriendsView';
+import { AiChatView } from './views/AiChatView';
+import { AiVoiceView } from './views/AiVoiceView';
+import { AiMusicView } from './views/AiMusicView';
+import { AiImageView } from './views/AiImageView';
+import { AiVideoView } from './views/AiVideoView';
+import { AiTranscribeView } from './views/AiTranscribeView';
 import { ShareModal } from './components/ShareModal';
 import { ScanResult, UserProfile } from './types';
 import { api } from './services/api';
@@ -157,6 +163,7 @@ export default function App() {
           <VideoCheckView
             onScanVideo={handleScanVideo}
             onOpenReportModal={(scan) => setActiveReportScan(scan)}
+            onNavigate={(tab) => setCurrentTab(tab as any)}
           />
         );
 
@@ -165,6 +172,7 @@ export default function App() {
           <AudioCheckView
             onScanAudio={handleScanAudio}
             onOpenReportModal={(scan) => setActiveReportScan(scan)}
+            onNavigate={(tab) => setCurrentTab(tab as any)}
           />
         );
 
@@ -173,6 +181,56 @@ export default function App() {
           <FileCheckView
             onScanFile={handleScanFile}
             onOpenReportModal={(scan) => setActiveReportScan(scan)}
+          />
+        );
+
+      case 'ai-chat':
+        return (
+          <AiChatView
+            onQuickVerifyText={async (text) => {
+              const res = await handleScanText(text);
+              setActiveReportScan(res);
+              setCurrentTab('text');
+            }}
+          />
+        );
+
+      case 'ai-voice':
+        return <AiVoiceView />;
+
+      case 'ai-music':
+        return <AiMusicView />;
+
+      case 'ai-image':
+        return (
+          <AiImageView
+            onSendToImageCheck={async (base64, mime, filename) => {
+              const res = await handleScanImage(base64, mime, filename);
+              setActiveReportScan(res);
+              setCurrentTab('image');
+            }}
+          />
+        );
+
+      case 'ai-video':
+        return (
+          <AiVideoView
+            onSendToVideoCheck={async (filename) => {
+              const res = await handleScanVideo(filename);
+              setActiveReportScan(res);
+              setCurrentTab('video');
+            }}
+          />
+        );
+
+      case 'ai-transcribe':
+        return (
+          <AiTranscribeView
+            onSendToTextCheck={async (text) => {
+              const res = await handleScanText(text);
+              setActiveReportScan(res);
+              setCurrentTab('text');
+            }}
           />
         );
 

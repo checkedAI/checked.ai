@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
-import { GoogleGenAI, Type } from '@google/genai';
+import http from 'http';
+import { WebSocketServer, WebSocket } from 'ws';
+import { GoogleGenAI, Type, Modality } from '@google/genai';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -1265,6 +1267,460 @@ app.post('/api/v1/referrals/validate', (req: Request, res: Response) => {
   });
 });
 
+// ============================================================================
+// CHECKED AI STUDIO & GEMINI MULTI-MODAL SUITE ENDPOINTS
+// ============================================================================
+
+// 1. POST /api/v1/ai/chat (Multi-turn Gemini Chatbot with Argon/Flash/Flash-Lite)
+app.post('/api/v1/ai/chat', async (req: Request, res: Response) => {
+  try {
+    if (!aiClient) {
+      res.status(503).json({ success: false, error: 'Gemini API is not configured on the server.' });
+      return;
+    }
+
+    const { messages, model, systemInstruction, role } = req.body;
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      res.status(400).json({ success: false, error: 'Messages array is required.' });
+      return;
+    }
+
+    let selectedModel = model || 'gemini-3.8-flash';
+    const allowedModels = ['gemini-4-argon', 'gemini-3.8-flash', 'gemini-3.1-flash-lite'];
+    if (!allowedModels.includes(selectedModel)) {
+      selectedModel = 'gemini-3.8-flash';
+    }
+
+    const defaultRoleInstruction = 'You are the Checked AI Senior Forensic Intelligence Analyst. Help users investigate suspicious claims, uncover digital scams, inspect deepfake indicators, explain phishing tactics, and safeguard online security.';
+    const finalInstruction = systemInstruction || (role ? `You are ${role} for Checked AI. ${defaultRoleInstruction}` : defaultRoleInstruction);
+
+    const contents = messages.map(m => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.text }]
+    }));
+
+    try {
+      const response = await aiClient.models.generateContent({
+        model: selectedModel,
+        contents,
+        config: {
+          systemInstruction: finalInstruction
+        }
+      });
+
+      res.json({
+        success: true,
+        text: response.text || '',
+        model: selectedModel
+      });
+    } catch (err: any) {
+      if (selectedModel === 'gemini-4-argon' && (err.status === 403 || err.status === 429 || err.message?.includes('RESOURCE_EXHAUSTED') || err.message?.includes('PERMISSION_DENIED'))) {
+        const fallbackRes = await aiClient.models.generateContent({
+          model: 'gemini-3.8-flash',
+          contents,
+          config: { systemInstruction: finalInstruction }
+        });
+        res.json({
+          success: true,
+          text: fallbackRes.text || '',
+          model: 'gemini-3.8-flash',
+          warning: 'gemini-4-argon requires a billing-enabled key. Automatically responded using gemini-3.8-flash.'
+        });
+        return;
+      }
+      throw err;
+    }
+  } catch (err: any) {
+    console.error('Chat error:', err);
+    res.status(500).json({ success: false, error: err.message || 'Chat generation failed' });
+  }
+});
+
+// 2. POST /api/v1/ai/music (Music generation with Lyria 3 Clip & Pro)
+app.post('/api/v1/ai/music', async (req: Request, res: Response) => {
+  try {
+    if (!aiClient) {
+      res.status(503).json({ success: false, error: 'Gemini API is not configured on the server.' });
+      return;
+    }
+
+    const { prompt, model } = req.body;
+    if (!prompt || typeof prompt !== 'string') {
+      res.status(400).json({ success: false, error: 'Music prompt is required.' });
+      return;
+    }
+
+    const selectedModel = model === 'lyria-3-pro-preview' ? 'lyria-3-pro-preview' : 'lyria-3-clip-preview';
+
+    try {
+      const response = await aiClient.models.generateContentStream({
+        model: selectedModel,
+        contents: prompt
+      });
+
+      let audioBase64 = '';
+      let lyrics = '';
+      let mimeType = 'audio/wav';
+
+      for await (const chunk of response) {
+        const parts = chunk.candidates?.[0]?.content?.parts;
+        if (!parts) continue;
+        for (const part of parts) {
+          if (part.inlineData?.data) {
+            if (!audioBase64 && part.inlineData.mimeType) {
+              mimeType = part.inlineData.mimeType;
+            }
+            audioBase64 += part.inlineData.data;
+          }
+          if (part.text && !lyrics) {
+            lyrics = part.text;
+          }
+        }
+      }
+
+      if (!audioBase64) {
+        throw new Error('No audio was returned by Lyria.');
+      }
+
+      res.json({
+        success: true,
+        audioBase64,
+        mimeType,
+        lyrics,
+        model: selectedModel
+      });
+    } catch (err: any) {
+      if (err.status === 403 || err.status === 429 || err.message?.includes('RESOURCE_EXHAUSTED') || err.message?.includes('PERMISSION_DENIED')) {
+        res.status(402).json({
+          success: false,
+          error: `${selectedModel} requires a billing-enabled Gemini API key. Please select a billing-enabled key in Settings > Secrets.`
+        });
+        return;
+      }
+      throw err;
+    }
+  } catch (err: any) {
+    console.error('Music generation error:', err);
+    res.status(500).json({ success: false, error: err.message || 'Music generation failed' });
+  }
+});
+
+// 3. POST /api/v1/ai/image/generate (Create images with gemini-nano-banana-2.1)
+app.post('/api/v1/ai/image/generate', async (req: Request, res: Response) => {
+  try {
+    if (!aiClient) {
+      res.status(503).json({ success: false, error: 'Gemini API is not configured on the server.' });
+      return;
+    }
+
+    const { prompt, aspectRatio, imageSize } = req.body;
+    if (!prompt || typeof prompt !== 'string') {
+      res.status(400).json({ success: false, error: 'Prompt is required.' });
+      return;
+    }
+
+    let model = 'gemini-nano-banana-2.1';
+    let base64Image = '';
+    let mimeType = 'image/png';
+
+    try {
+      const interaction = await aiClient.interactions.create({
+        model,
+        input: prompt,
+        response_modalities: ['image', 'text'],
+        generation_config: {
+          image_config: {
+            aspect_ratio: aspectRatio || '1:1',
+            image_size: imageSize || '1K'
+          }
+        }
+      });
+
+      for (const step of interaction.steps || []) {
+        if (step.type === 'model_output') {
+          const imageContent: any = step.content?.find((c: any) => c.type === 'image');
+          if (imageContent && imageContent.data) {
+            base64Image = imageContent.data;
+            mimeType = imageContent.mime_type || 'image/png';
+            break;
+          }
+        }
+      }
+    } catch (err: any) {
+      if (err.status === 403 || err.status === 429 || err.message?.includes('RESOURCE_EXHAUSTED')) {
+        try {
+          const fallback = await aiClient.interactions.create({
+            model: 'gemini-3.1-flash-lite-image',
+            input: prompt,
+            response_modalities: ['image', 'text'],
+            generation_config: {
+              image_config: { aspect_ratio: aspectRatio || '1:1' }
+            }
+          });
+          for (const step of fallback.steps || []) {
+            if (step.type === 'model_output') {
+              const imageContent: any = step.content?.find((c: any) => c.type === 'image');
+              if (imageContent && imageContent.data) {
+                base64Image = imageContent.data;
+                mimeType = imageContent.mime_type || 'image/png';
+                model = 'gemini-3.1-flash-lite-image (fallback)';
+                break;
+              }
+            }
+          }
+        } catch {
+          throw err;
+        }
+      } else {
+        throw err;
+      }
+    }
+
+    if (!base64Image) {
+      throw new Error('No image was returned by the model.');
+    }
+
+    res.json({
+      success: true,
+      imageUrl: `data:${mimeType};base64,${base64Image}`,
+      model
+    });
+  } catch (err: any) {
+    console.error('Image generation error:', err);
+    res.status(500).json({ success: false, error: err.message || 'Image generation failed' });
+  }
+});
+
+// 4. POST /api/v1/ai/image/edit (Edit images with gemini-nano-banana-2.1)
+app.post('/api/v1/ai/image/edit', async (req: Request, res: Response) => {
+  try {
+    if (!aiClient) {
+      res.status(503).json({ success: false, error: 'Gemini API is not configured on the server.' });
+      return;
+    }
+
+    const { prompt, imageBase64, mimeType } = req.body;
+    if (!prompt || !imageBase64) {
+      res.status(400).json({ success: false, error: 'Prompt and image are required.' });
+      return;
+    }
+
+    const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+    const cleanMime = mimeType || 'image/png';
+
+    const interaction = await aiClient.interactions.create({
+      model: 'gemini-nano-banana-2.1',
+      input: [
+        {
+          type: 'image',
+          data: cleanBase64,
+          mime_type: cleanMime
+        },
+        {
+          type: 'text',
+          text: prompt
+        }
+      ],
+      response_modalities: ['image', 'text']
+    });
+
+    let outputBase64 = '';
+    let outputMime = 'image/png';
+
+    for (const step of interaction.steps || []) {
+      if (step.type === 'model_output') {
+        const imageContent: any = step.content?.find((c: any) => c.type === 'image');
+        if (imageContent && imageContent.data) {
+          outputBase64 = imageContent.data;
+          outputMime = imageContent.mime_type || 'image/png';
+          break;
+        }
+      }
+    }
+
+    if (!outputBase64) {
+      throw new Error('No edited image was returned by the model.');
+    }
+
+    res.json({
+      success: true,
+      imageUrl: `data:${outputMime};base64,${outputBase64}`,
+      model: 'gemini-nano-banana-2.1'
+    });
+  } catch (err: any) {
+    console.error('Image editing error:', err);
+    res.status(500).json({ success: false, error: err.message || 'Image editing failed' });
+  }
+});
+
+// 5. POST /api/v1/ai/video/generate (Generate video from text with gemini-omni-1.2-flash via Interactions API)
+app.post('/api/v1/ai/video/generate', async (req: Request, res: Response) => {
+  try {
+    if (!aiClient) {
+      res.status(503).json({ success: false, error: 'Gemini API is not configured on the server.' });
+      return;
+    }
+
+    const { prompt, aspectRatio, duration, resolution } = req.body;
+    if (!prompt || typeof prompt !== 'string') {
+      res.status(400).json({ success: false, error: 'Prompt is required.' });
+      return;
+    }
+
+    const validAspectRatio = aspectRatio === '9:16' ? '9:16' : '16:9';
+
+    const interaction = await aiClient.interactions.create({
+      model: 'gemini-omni-1.2-flash',
+      input: prompt,
+      background: false,
+      store: false,
+      stream: false,
+      response_format: {
+        type: 'video',
+        aspect_ratio: validAspectRatio,
+        duration: duration || '10s',
+        resolution: resolution || '720p'
+      }
+    }, { timeout: 300000 });
+
+    const videoPart = interaction.output_video;
+    if (videoPart && (videoPart.data || (videoPart as any).uri)) {
+      const dataUri = videoPart.data ? `data:${videoPart.mime_type || 'video/mp4'};base64,${videoPart.data}` : (videoPart as any).uri;
+      res.json({
+        success: true,
+        videoUrl: dataUri,
+        model: 'gemini-omni-1.2-flash',
+        aspectRatio: validAspectRatio
+      });
+      return;
+    }
+
+    throw new Error('Video generation completed but did not produce a video output.');
+  } catch (err: any) {
+    console.error('Video generation error:', err);
+    if (err.status === 403 || err.status === 429 || err.message?.includes('RESOURCE_EXHAUSTED') || err.message?.includes('PERMISSION_DENIED')) {
+      res.status(402).json({
+        success: false,
+        error: 'gemini-omni-1.2-flash requires a billing-enabled Gemini API key. Please select a billing-enabled key in Settings > Secrets.'
+      });
+      return;
+    }
+    res.status(500).json({ success: false, error: err.message || 'Video generation failed' });
+  }
+});
+
+// 6. POST /api/v1/ai/video/animate (Animate images into video with gemini-omni-1.2-flash via Interactions API)
+app.post('/api/v1/ai/video/animate', async (req: Request, res: Response) => {
+  try {
+    if (!aiClient) {
+      res.status(503).json({ success: false, error: 'Gemini API is not configured on the server.' });
+      return;
+    }
+
+    const { imageBase64, mimeType, prompt, aspectRatio } = req.body;
+    if (!imageBase64) {
+      res.status(400).json({ success: false, error: 'Starting frame image is required.' });
+      return;
+    }
+
+    const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+    const cleanMime = mimeType || 'image/png';
+    const validAspectRatio = aspectRatio === '9:16' ? '9:16' : '16:9';
+
+    const interaction = await aiClient.interactions.create({
+      model: 'gemini-omni-1.2-flash',
+      input: [
+        {
+          type: 'image',
+          mime_type: cleanMime,
+          data: cleanBase64
+        },
+        {
+          type: 'text',
+          text: prompt || 'Animate this photo with natural, subtle motion.'
+        }
+      ],
+      background: false,
+      store: false,
+      stream: false,
+      response_format: {
+        type: 'video',
+        aspect_ratio: validAspectRatio
+      }
+    }, { timeout: 300000 });
+
+    const videoPart = interaction.output_video;
+    if (videoPart && (videoPart.data || (videoPart as any).uri)) {
+      const dataUri = videoPart.data ? `data:${videoPart.mime_type || 'video/mp4'};base64,${videoPart.data}` : (videoPart as any).uri;
+      res.json({
+        success: true,
+        videoUrl: dataUri,
+        model: 'gemini-omni-1.2-flash',
+        aspectRatio: validAspectRatio
+      });
+      return;
+    }
+
+    throw new Error('Video animation completed but did not produce a video output.');
+  } catch (err: any) {
+    console.error('Video animation error:', err);
+    if (err.status === 403 || err.status === 429 || err.message?.includes('RESOURCE_EXHAUSTED') || err.message?.includes('PERMISSION_DENIED')) {
+      res.status(402).json({
+        success: false,
+        error: 'gemini-omni-1.2-flash requires a billing-enabled Gemini API key. Please select a billing-enabled key in Settings > Secrets.'
+      });
+      return;
+    }
+    res.status(500).json({ success: false, error: err.message || 'Video animation failed' });
+  }
+});
+
+// 7. POST /api/v1/ai/transcribe (Transcribe audio with gemini-3.5-transcribe)
+app.post('/api/v1/ai/transcribe', async (req: Request, res: Response) => {
+  try {
+    if (!aiClient) {
+      res.status(503).json({ success: false, error: 'Gemini API is not configured on the server.' });
+      return;
+    }
+
+    const { audioBase64, mimeType } = req.body;
+    if (!audioBase64) {
+      res.status(400).json({ success: false, error: 'Audio data is required.' });
+      return;
+    }
+
+    const cleanBase64 = audioBase64.replace(/^data:audio\/\w+;base64,/, '');
+    const cleanMime = mimeType || 'audio/mp3';
+
+    const interaction = await aiClient.interactions.create({
+      model: 'gemini-3.5-transcribe',
+      input: [
+        {
+          type: 'audio',
+          data: cleanBase64,
+          mime_type: cleanMime
+        },
+        {
+          type: 'text',
+          text: 'Transcribe this audio verbatim with high punctuation accuracy. Return only the transcription text.'
+        }
+      ]
+    });
+
+    const transcript = interaction.output_text || '';
+
+    res.json({
+      success: true,
+      transcript,
+      model: 'gemini-3.5-transcribe',
+      wordCount: transcript.trim().split(/\s+/).filter(Boolean).length
+    });
+  } catch (err: any) {
+    console.error('Audio transcription error:', err);
+    res.status(500).json({ success: false, error: err.message || 'Audio transcription failed' });
+  }
+});
+
 // Vite middleware in dev or static files in production
 async function startServer() {
   const isProd = process.env.NODE_ENV === 'production';
@@ -1284,7 +1740,86 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  // Create HTTP server to bind both Express app and WebSocket Live API server
+  const server = http.createServer(app);
+
+  // Gemini Live API (gemini-3.8-live) WebSocket Bridge
+  const wss = new WebSocketServer({ server, path: '/api/live-ws' });
+
+  wss.on('connection', async (clientWs: WebSocket) => {
+    console.log('[Live API] Client connected to WebSocket');
+    if (!aiClient) {
+      clientWs.send(JSON.stringify({ error: 'Gemini API key is not configured on the server.' }));
+      clientWs.close();
+      return;
+    }
+
+    try {
+      const session = await aiClient.live.connect({
+        model: 'gemini-3.8-live',
+        config: {
+          responseModalities: [Modality.AUDIO],
+          speechConfig: {
+            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } }
+          },
+          systemInstruction: 'You are the Checked AI real-time voice analyst. Help users examine suspicious digital content, scams, and digital safety queries with concise, spoken answers.'
+        },
+        callbacks: {
+          onmessage: (message: any) => {
+            for (const part of message.serverContent?.modelTurn?.parts ?? []) {
+              if (part.inlineData?.data) {
+                clientWs.send(JSON.stringify({ audio: part.inlineData.data }));
+              }
+            }
+            if (message.serverContent?.interrupted) {
+              clientWs.send(JSON.stringify({ interrupted: true }));
+            }
+          },
+          onclose: () => {
+            if (clientWs.readyState === WebSocket.OPEN) {
+              clientWs.send(JSON.stringify({ status: 'session_closed' }));
+            }
+          },
+          onerror: (err: any) => {
+            console.error('[Live API] Session error:', err);
+            if (clientWs.readyState === WebSocket.OPEN) {
+              clientWs.send(JSON.stringify({ error: err.message || 'Live session error' }));
+            }
+          }
+        }
+      });
+
+      clientWs.on('message', (data: Buffer | string) => {
+        try {
+          const msg = JSON.parse(data.toString());
+          if (msg.audio) {
+            session.sendRealtimeInput({
+              audio: { data: msg.audio, mimeType: 'audio/pcm;rate=16000' }
+            });
+          } else if (msg.text) {
+            session.sendRealtimeInput({
+              text: msg.text
+            });
+          }
+        } catch (e: any) {
+          console.error('[Live API] WS message processing error:', e);
+        }
+      });
+
+      clientWs.on('close', () => {
+        console.log('[Live API] Client disconnected');
+        try {
+          session.close();
+        } catch {}
+      });
+    } catch (err: any) {
+      console.error('[Live API] Failed to connect to Gemini Live:', err);
+      clientWs.send(JSON.stringify({ error: err.message || 'Failed to initialize Gemini Live session' }));
+      clientWs.close();
+    }
+  });
+
+  server.listen(PORT, '0.0.0.0', () => {
     console.log(`Checked AI server running on http://0.0.0.0:${PORT}`);
   });
 }

@@ -18,7 +18,13 @@ import {
   X,
   ExternalLink,
   Users,
-  Share2
+  Share2,
+  Bot,
+  Radio,
+  Music,
+  Clapperboard,
+  FileAudio,
+  Sparkles
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -30,6 +36,12 @@ export type NavTab =
   | 'video'
   | 'audio'
   | 'file'
+  | 'ai-chat'
+  | 'ai-voice'
+  | 'ai-music'
+  | 'ai-image'
+  | 'ai-video'
+  | 'ai-transcribe'
   | 'history'
   | 'reports'
   | 'alerts'
@@ -71,6 +83,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'video', label: 'Video Check', icon: Video },
     { id: 'audio', label: 'Audio Check', icon: Mic },
     { id: 'file', label: 'File Check', icon: FileCheck2 },
+  ];
+
+  const studioNav: NavItem[] = [
+    { id: 'ai-chat', label: 'Gemini Chatbot', icon: Bot, badge: 'Argon/Flash' },
+    { id: 'ai-voice', label: 'Voice Conversations', icon: Radio, badge: 'Live API' },
+    { id: 'ai-music', label: 'Generate Music', icon: Music, badge: 'Lyria' },
+    { id: 'ai-image', label: 'Create & Edit Images', icon: Sparkles, badge: 'Banana 2.1' },
+    { id: 'ai-video', label: 'Video Studio', icon: Clapperboard, badge: 'Omni Flash' },
+    { id: 'ai-transcribe', label: 'Transcribe Audio', icon: FileAudio, badge: 'Gemini 3.5' },
   ];
 
   const manageNav: NavItem[] = [
@@ -178,6 +199,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Navigation list */}
         <nav className="flex-1 px-3 py-4 overflow-y-auto space-y-1">
           {renderNavGroup('Detection Modules', primaryNav)}
+          {renderNavGroup('AI Studio & Creation Suite', studioNav)}
           {renderNavGroup('Forensics & History', manageNav)}
           {renderNavGroup('Community & Growth', communityNav)}
           {renderNavGroup('Administration', adminNav)}

@@ -26,6 +26,12 @@ export const Header: React.FC<HeaderProps> = ({
       case 'video': return 'Video Deepfake Detection';
       case 'audio': return 'Audio Analysis';
       case 'file': return 'File & Document Check';
+      case 'ai-chat': return 'Gemini Chatbot (Argon / Flash)';
+      case 'ai-voice': return 'Real-Time Voice (Live API)';
+      case 'ai-music': return 'Lyria Music Generation';
+      case 'ai-image': return 'Create & Edit Images (Nano Banana 2.1)';
+      case 'ai-video': return 'Omni Video Studio (Generate & Animate)';
+      case 'ai-transcribe': return 'Audio Transcription (Gemini 3.5)';
       case 'history': return 'Scan History';
       case 'reports': return 'Forensic Reports';
       case 'alerts': return 'Threat Alerts';

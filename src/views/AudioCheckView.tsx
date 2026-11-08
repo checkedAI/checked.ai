@@ -19,11 +19,13 @@ import { ResultCard } from '../components/ResultCard';
 interface AudioCheckViewProps {
   onScanAudio: (filename: string, fileSize?: string) => Promise<ScanResult>;
   onOpenReportModal: (scan: ScanResult) => void;
+  onNavigate?: (tab: any) => void;
 }
 
 export const AudioCheckView: React.FC<AudioCheckViewProps> = ({
   onScanAudio,
-  onOpenReportModal
+  onOpenReportModal,
+  onNavigate
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -117,13 +119,33 @@ export const AudioCheckView: React.FC<AudioCheckViewProps> = ({
             Supported audio: <span className="font-semibold text-slate-700">MP3, WAV, M4A</span> (Max 25MB)
           </div>
 
-          <button
-            type="button"
-            onClick={handleLoadSample}
-            className="px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md transition-colors"
-          >
-            Load Sample Audio Clip
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleLoadSample}
+              className="px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md transition-colors"
+            >
+              Load Sample Audio Clip
+            </button>
+            {onNavigate && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('ai-transcribe')}
+                  className="px-2.5 py-1 text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-md transition-colors"
+                >
+                  Transcribe Speech
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('ai-music')}
+                  className="px-2.5 py-1 text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md transition-colors"
+                >
+                  Lyria Music Studio
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {!audioUrl ? (
